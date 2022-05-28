@@ -1,4 +1,6 @@
-# capnproto-unity
+# Cap'n Proto port for Unity
+
+![Logo](logo/CapNProtoUnity.png)
 
 A Cap'n Proto implementation for .NET Standard 2.0 (credits to [lostinplace](https://github.com/lostinplace)) and .NET Core (credits to [c80k](https://github.com/c80k)) ported to Unity.
 
