@@ -16,11 +16,11 @@ namespace Capnp.Util
 
                 try
                 {
-                    UnityEngine.Debug.LogError($"Unable to join thread {name}. Thread is in state {thread.ThreadState}.");
-                    thread.Interrupt();
+                    Console.WriteLine($"Unable to join thread {name}. Thread is in state {thread.ThreadState}.");
+                    thread.Abort();
                     if (!thread.Join(timeout))
                     {
-                        UnityEngine.Debug.LogError($"Still unable to join thread {name} after Interrupt(). Thread is in state {thread.ThreadState}.");
+                        Console.WriteLine($"Still unable to join thread {name} after Abort(). Thread is in state {thread.ThreadState}.");
                     }
                 }
                 catch

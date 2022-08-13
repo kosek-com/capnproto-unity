@@ -97,7 +97,7 @@ namespace Capnp.Rpc
                 }
                 catch (ThreadInterruptedException)
                 {
-                    UnityEngine.Debug.LogError($"{Thread.CurrentThread.Name} interrupted at {Environment.StackTrace}");
+                    Console.WriteLine($"{Thread.CurrentThread.Name} interrupted at {Environment.StackTrace}");
                 }
                 finally
                 {
@@ -185,12 +185,12 @@ namespace Capnp.Rpc
             {
                 if (WhenConnected != null && !WhenConnected.Wait(500))
                 {
-                    UnityEngine.Debug.LogError("Unable to join connection task within timeout");
+                    Console.WriteLine("Unable to join connection task within timeout");
                 }
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogException(e);
+                Console.WriteLine(e);
             }
 
             _pumpThread?.SafeJoin();

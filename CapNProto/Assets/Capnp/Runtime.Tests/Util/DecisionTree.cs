@@ -32,7 +32,7 @@ namespace Capnp.Net.Runtime.Tests
             }
             catch (ArgumentOutOfRangeException)
             {
-                UnityEngine.Debug.LogError($"WTF?! {_pos - 1}, {_decisions.Count}");
+                Console.WriteLine($"WTF?! {_pos - 1}, {_decisions.Count}");
                 throw;
             }
         }
@@ -82,11 +82,11 @@ namespace Capnp.Net.Runtime.Tests
 
         public void Iterate(Action testMethod)
         {
-            UnityEngine.Debug.Log("Starting decision-tree based combinatorial test");
+            Console.WriteLine("Starting decision-tree based combinatorial test");
             int iter = 0;
             do
             {
-                UnityEngine.Debug.Log($"Iteration {iter}: pattern {ToString()}");
+                Console.WriteLine($"Iteration {iter}: pattern {ToString()}");
                 testMethod();
                 ++iter;
             } while (NextRound());

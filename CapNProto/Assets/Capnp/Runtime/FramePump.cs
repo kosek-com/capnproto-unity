@@ -180,11 +180,11 @@ namespace Capnp
                    ioex.InnerException is SocketException sockex && 
                    sockex.SocketErrorCode == SocketError.Interrupted)
             {
-                UnityEngine.Debug.Log("Encountered end of stream");
+                Console.WriteLine("Encountered end of stream");
             }
             catch (InvalidDataException e)
             {
-                UnityEngine.Debug.LogWarning(e.Message);
+                Console.WriteLine(e.Message);
             }
             catch (ObjectDisposedException)
             {
@@ -195,7 +195,7 @@ namespace Capnp
                 // not worth logging.
                 if (_disposing == 0)
                 {
-                    UnityEngine.Debug.LogWarning(exception.Message);
+                    Console.WriteLine(exception.Message);
                 }
             }
             finally

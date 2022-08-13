@@ -19,7 +19,7 @@ namespace Capnp.Net.Runtime.Tests
         {
             for (int i = 0; i < count; i++)
             {
-                UnityEngine.Debug.Log($"Repetition {i}");
+                Console.WriteLine($"Repetition {i}");
                 action();
             }
         }

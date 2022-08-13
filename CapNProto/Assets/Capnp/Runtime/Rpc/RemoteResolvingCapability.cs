@@ -49,7 +49,7 @@ namespace Capnp.Rpc
                     )
                 {
 #if DebugEmbargos
-                    UnityEngine.Debug.Log("Direct call");
+                    Console.WriteLine("Direct call");
 #endif
                     using var proxy = new Proxy(resolvedCap);
                     return proxy.Call(interfaceId, methodId, args, default);
@@ -59,14 +59,14 @@ namespace Capnp.Rpc
                     if (_disembargo == null)
                     {
 #if DebugEmbargos
-                        UnityEngine.Debug.Log("Requesting disembargo");
+                        Console.WriteLine("Requesting disembargo");
 #endif
                         _disembargo = _ep.RequestSenderLoopback(GetMessageTarget).EnforceAwaitOrder();
                     }
                     else
                     {
 #if DebugEmbargos
-                        UnityEngine.Debug.Log("Waiting for requested disembargo");
+                        Console.WriteLine("Waiting for requested disembargo");
 #endif
                     }
 

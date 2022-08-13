@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine.TestTools;
 
 namespace Capnp.Net.Runtime.Tests
 {
@@ -33,6 +34,12 @@ namespace Capnp.Net.Runtime.Tests
 
     public class TestBase
     {
+
+        [SetUp]
+        public void Init()
+        {
+            LogAssert.ignoreFailingMessages = true;
+        }
 
         protected class EnginePair
         {
@@ -349,8 +356,8 @@ namespace Capnp.Net.Runtime.Tests
             }
         }
 
-        public static int MediumNonDbgTimeout => Debugger.IsAttached ? Timeout.Infinite : 5000;
-        public static int LargeNonDbgTimeout => Debugger.IsAttached ? Timeout.Infinite : 20000;
+        public static int MediumNonDbgTimeout => 5000;
+        public static int LargeNonDbgTimeout => 20000;
         public static int ShortTimeout => 500;
 
         protected TestBase()

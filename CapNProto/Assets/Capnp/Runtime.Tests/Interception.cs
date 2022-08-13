@@ -298,7 +298,7 @@ namespace Capnp.Net.Runtime.Tests
             using (server)
             using (client)
             {
-                client.WhenConnected.Wait();
+                //client.WhenConnected.Wait();
 
                 var counters = new Counters();
                 server.Main = new TestMoreStuffImpl(counters);

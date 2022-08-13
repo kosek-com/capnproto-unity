@@ -76,7 +76,7 @@ namespace Capnp.Net.Runtime.Tests
                     }
                     catch (System.Exception exception)
                     {
-                        UnityEngine.Debug.LogError(exception.Message);
+                        Console.WriteLine(exception.Message);
                         return false;
                     }
 

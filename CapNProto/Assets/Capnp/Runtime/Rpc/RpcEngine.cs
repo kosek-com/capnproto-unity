@@ -291,8 +291,8 @@ namespace Capnp.Rpc
                 }
                 catch (System.Exception exception)
                 {
-                    UnityEngine.Debug.LogWarning("Unable to send frame:");
-                    UnityEngine.Debug.LogException(exception);
+                    Console.WriteLine("Unable to send frame:\n");
+                    Console.WriteLine(exception);
                     throw new RpcException("Unable to send frame", exception);
                 }
             }
@@ -446,7 +446,7 @@ namespace Capnp.Rpc
                 }
                 else
                 {
-                    UnityEngine.Debug.LogWarning("Peer asked for bootstrap capability, but no bootstrap capability was set.");
+                    Console.WriteLine("Peer asked for bootstrap capability, but no bootstrap capability was set.");
 
                     ret.which = Return.WHICH.Exception;
                     ret.Exception!.Reason = "No bootstrap capability present";
@@ -464,7 +464,7 @@ namespace Capnp.Rpc
 
                 if (!added)
                 {
-                    UnityEngine.Debug.LogWarning("Incoming bootstrap request: Peer specified duplicate (not yet released?) answer ID.");
+                    Console.WriteLine("Incoming bootstrap request: Peer specified duplicate (not yet released?) answer ID.");
                     throw new RpcProtocolErrorException("Duplicate question ID");
                 }
 
@@ -522,7 +522,7 @@ namespace Capnp.Rpc
                     }
                     catch (RpcException exception)
                     {
-                        UnityEngine.Debug.LogWarning($"Unable to return call: {exception.InnerException?.Message ?? exception.Message}");
+                        Console.WriteLine($"Unable to return call: {exception.InnerException?.Message ?? exception.Message}");
                     }
                 }
 
@@ -540,7 +540,7 @@ namespace Capnp.Rpc
 
                     if (!added)
                     {
-                        UnityEngine.Debug.LogWarning("Incoming RPC call: Peer specified duplicate (not yet released?) answer ID.");
+                        Console.WriteLine("Incoming RPC call: Peer specified duplicate (not yet released?) answer ID.");
 
                         pendingAnswer.Cancel();
                         pendingAnswer.Dispose();
@@ -680,11 +680,11 @@ namespace Capnp.Rpc
                         break;
 
                     case Call.sendResultsTo.WHICH.ThirdParty:
-                        UnityEngine.Debug.LogWarning("Incoming RPC call: Peer requested sending results to 3rd party, which is not (yet) supported.");
+                        Console.WriteLine("Incoming RPC call: Peer requested sending results to 3rd party, which is not (yet) supported.");
                         throw new RpcUnimplementedException();
 
                     default:
-                        UnityEngine.Debug.LogWarning("Incoming RPC call: Peer requested unknown send-results-to mode.");
+                        Console.WriteLine("Incoming RPC call: Peer requested unknown send-results-to mode.");
                         throw new RpcUnimplementedException();
                 }
 
@@ -706,7 +706,7 @@ namespace Capnp.Rpc
                                 }
                                 else
                                 {
-                                    UnityEngine.Debug.LogWarning("Incoming RPC call: Peer asked for invalid (already released?) capability ID.");
+                                    Console.WriteLine("Incoming RPC call: Peer asked for invalid (already released?) capability ID.");
 
                                     throw new RpcProtocolErrorException($"Requested capability with ID {req.Target.ImportedCap} does not exist.");
                                 }
@@ -757,14 +757,14 @@ namespace Capnp.Rpc
                                 }
                                 else
                                 {
-                                    UnityEngine.Debug.LogWarning("Incoming RPC call: Peer asked for non-existing answer ID.");
+                                    Console.WriteLine("Incoming RPC call: Peer asked for non-existing answer ID.");
                                     throw new RpcProtocolErrorException($"Did not find a promised answer for given ID {req.Target.PromisedAnswer.QuestionId}");
                                 }
                             }
                             break;
 
                         default:
-                            UnityEngine.Debug.LogWarning("Incoming RPC call: Peer specified unknown call target.");
+                            Console.WriteLine("Incoming RPC call: Peer specified unknown call target.");
 
                             throw new RpcUnimplementedException();
                     }
@@ -785,7 +785,7 @@ namespace Capnp.Rpc
                 {
                     if (!_questionTable.TryGetValue(req.AnswerId, out question))
                     {
-                        UnityEngine.Debug.LogWarning("Incoming RPC return: Unknown answer ID.");
+                        Console.WriteLine("Incoming RPC return: Unknown answer ID.");
 
                         throw new RpcProtocolErrorException("Unknown answer ID");
                     }
@@ -805,7 +805,7 @@ namespace Capnp.Rpc
                         break;
 
                     case Return.WHICH.AcceptFromThirdParty:
-                        UnityEngine.Debug.LogWarning(
+                        Console.WriteLine(
                             "Incoming RPC return: Peer requested to accept results from 3rd party, which is not (yet) supported.");
 
                         throw new RpcUnimplementedException();
@@ -862,7 +862,7 @@ namespace Capnp.Rpc
                             }
                             else
                             {
-                                UnityEngine.Debug.LogWarning("Incoming RPC return: Peer requested to take results from other question, but specified ID is unknown (already released?)");
+                                Console.WriteLine("Incoming RPC return: Peer requested to take results from other question, but specified ID is unknown (already released?)");
                                 throw new RpcProtocolErrorException("Invalid ID");
                             }
                         }
@@ -896,7 +896,7 @@ namespace Capnp.Rpc
 
                     if (!(cap is PromisedCapability resolvableCap))
                     {
-                        UnityEngine.Debug.LogWarning("Received a resolve message for a capability which is not a promise");
+                        Console.WriteLine("Received a resolve message for a capability which is not a promise");
                         throw new RpcProtocolErrorException($"Not a promise {resolve.PromiseId}");
                     }
 
@@ -914,7 +914,7 @@ namespace Capnp.Rpc
                                 break;
 
                             default:
-                                UnityEngine.Debug.LogWarning("Received a resolve message with unknown category.");
+                                Console.WriteLine("Received a resolve message with unknown category.");
                                 throw new RpcUnimplementedException();
                         }
                     }
@@ -941,7 +941,7 @@ namespace Capnp.Rpc
 
                         if (!_exportTable.TryGetValue(disembargo.Target.ImportedCap, out var cap))
                         {
-                            UnityEngine.Debug.LogWarning("Sender loopback request: Peer asked for invalid (already released?) capability ID.");
+                            Console.WriteLine("Sender loopback request: Peer asked for invalid (already released?) capability ID.");
 
                             throw new RpcProtocolErrorException("'Disembargo': Invalid capability ID");
                         }
@@ -979,13 +979,13 @@ namespace Capnp.Rpc
                                     if (proxy.ConsumedCap is RemoteCapability remote && remote.Endpoint == this)
                                     {
 #if DebugEmbargos
-                                        UnityEngine.Debug.Log($"Sender loopback disembargo. Thread = {Thread.CurrentThread.Name}");
+                                        Console.WriteLine($"Sender loopback disembargo. Thread = {Thread.CurrentThread.Name}");
 #endif
                                         Tx(mb.Frame);
                                     }
                                     else
                                     {
-                                        UnityEngine.Debug.LogWarning("Sender loopback request: Peer asked for disembargoing an answer which does not resolve back to the sender.");
+                                        Console.WriteLine("Sender loopback request: Peer asked for disembargoing an answer which does not resolve back to the sender.");
 
                                         throw new RpcProtocolErrorException("'Disembargo': Answer does not resolve back to me");
                                     }
@@ -993,7 +993,7 @@ namespace Capnp.Rpc
                         }
                         else
                         {
-                            UnityEngine.Debug.LogWarning("Sender loopback request: Peer asked for non-existing answer ID.");
+                            Console.WriteLine("Sender loopback request: Peer asked for non-existing answer ID.");
 
                             throw new RpcProtocolErrorException("'Disembargo': Invalid answer ID");
                         }
@@ -1001,7 +1001,7 @@ namespace Capnp.Rpc
                         break;
 
                     default:
-                        UnityEngine.Debug.LogWarning("Sender loopback request: Peer specified unknown call target.");
+                        Console.WriteLine("Sender loopback request: Peer specified unknown call target.");
 
                         throw new RpcUnimplementedException();
                 }
@@ -1025,14 +1025,14 @@ namespace Capnp.Rpc
                     // whether this is a security issue: Can the sloppy checking be exploited in some way?
 
 #if DebugEmbargos
-                    UnityEngine.Debug.Log($"Receiver loopback disembargo, Thread = {Thread.CurrentThread.Name}");
+                    Console.WriteLine($"Receiver loopback disembargo, Thread = {Thread.CurrentThread.Name}");
 #endif
 
                     tcs.SetResult(0);
                 }
                 else
                 {
-                    UnityEngine.Debug.LogWarning("Peer sent receiver loopback with unknown ID");
+                    Console.WriteLine("Peer sent receiver loopback with unknown ID");
                     throw new RpcProtocolErrorException("Invalid ID");
                 }
             }
@@ -1113,7 +1113,7 @@ namespace Capnp.Rpc
                 }
                 else
                 {
-                    UnityEngine.Debug.LogWarning("Peer sent 'finish' message with unknown question ID");
+                    Console.WriteLine("Peer sent 'finish' message with unknown question ID");
 
                     throw new RpcProtocolErrorException("unknown question ID");
                 }
@@ -1143,7 +1143,7 @@ namespace Capnp.Rpc
                         }
                         catch (System.Exception exception)
                         {
-                            UnityEngine.Debug.LogWarning($"Attempting to release capability with invalid reference count: {exception.Message}");
+                            Console.WriteLine($"Attempting to release capability with invalid reference count: {exception.Message}");
 
                             throw new RpcProtocolErrorException("Invalid reference count");
                         }
@@ -1152,7 +1152,7 @@ namespace Capnp.Rpc
 
                 if (!exists)
                 {
-                    UnityEngine.Debug.LogWarning("Attempting to release unknown capability ID");
+                    Console.WriteLine("Attempting to release unknown capability ID");
 
                     throw new RpcProtocolErrorException("Invalid export ID");
                 }
@@ -1192,7 +1192,7 @@ namespace Capnp.Rpc
                 {
                     if (!_questionTable.TryGetValue(call.QuestionId, out question))
                     {
-                        UnityEngine.Debug.LogWarning("Unimplemented call: Unknown question ID.");
+                        Console.WriteLine("Unimplemented call: Unknown question ID.");
 
                         throw new RpcProtocolErrorException("Unknown question ID");
                     }
@@ -1269,7 +1269,7 @@ namespace Capnp.Rpc
                     switch (msg.which)
                     {
                         case Message.WHICH.Abort:
-                            UnityEngine.Debug.Log($"Got 'abort' '{msg.Abort.TheType}' message from peer: {msg.Abort.Reason}");
+                            Console.WriteLine($"Got 'abort' '{msg.Abort.TheType}' message from peer: {msg.Abort.Reason}");
                             break;
 
                         case Message.WHICH.Bootstrap:
@@ -1307,13 +1307,13 @@ namespace Capnp.Rpc
                         case Message.WHICH.Accept:
                         case Message.WHICH.Join:
                         case Message.WHICH.Provide:
-                            UnityEngine.Debug.LogWarning("Received level-3 message from peer. I don't support that.");
+                            Console.WriteLine("Received level-3 message from peer. I don't support that.");
                             throw new RpcUnimplementedException();
 
                         case Message.WHICH.ObsoleteDelete:
                         case Message.WHICH.ObsoleteSave:
                         default:
-                            UnityEngine.Debug.LogWarning("Received unknown or unimplemented message from peer");
+                            Console.WriteLine("Received unknown or unimplemented message from peer");
                             throw new RpcUnimplementedException();
                     }
                 }
@@ -1334,7 +1334,7 @@ namespace Capnp.Rpc
                 }
                 catch (System.Exception exception)
                 {
-                    UnityEngine.Debug.LogException(exception);
+                    Console.WriteLine(exception);
 
                     // A first intuition might be to send the caught exception message. But this is probably a bad idea:
                     // First, we send implementation specific details of a - maybe internal - error, not very valuable for the
@@ -1389,7 +1389,7 @@ namespace Capnp.Rpc
                             }
                             else
                             {
-                                UnityEngine.Debug.LogWarning("Peer refers to receiver-hosted capability which does not exist.");
+                                Console.WriteLine("Peer refers to receiver-hosted capability which does not exist.");
                                 throw new RpcProtocolErrorException($"Receiver-hosted capability {capDesc.ReceiverHosted} does not exist.");
                             }
 
@@ -1421,7 +1421,7 @@ namespace Capnp.Rpc
                             }
                             else
                             {
-                                UnityEngine.Debug.LogWarning("Peer refers to pending answer which does not exist.");
+                                Console.WriteLine("Peer refers to pending answer which does not exist.");
                                 throw new RpcProtocolErrorException($"Invalid question ID {capDesc.ReceiverAnswer.QuestionId}");
                             }
 
@@ -1444,7 +1444,7 @@ namespace Capnp.Rpc
                             return NullCapability.Instance;
 
                         default:
-                            UnityEngine.Debug.LogWarning("Unknown capability descriptor category");
+                            Console.WriteLine("Unknown capability descriptor category");
                             throw new RpcUnimplementedException();
                     }
                 }
@@ -1533,7 +1533,7 @@ namespace Capnp.Rpc
                 }
                 catch (System.Exception exception)
                 {
-                    UnityEngine.Debug.LogWarning($"Unable to send 'finish' message: {exception.Message}");
+                    Console.WriteLine($"Unable to send 'finish' message: {exception.Message}");
                 }
 
                 // Note: Keep question ID in the table, since a "return" message with either "canceled" or
@@ -1583,7 +1583,7 @@ namespace Capnp.Rpc
                     }
                     catch (RpcException exception)
                     {
-                        UnityEngine.Debug.LogWarning($"Unable to release import: {exception.InnerException?.Message ?? exception.Message}");
+                        Console.WriteLine($"Unable to release import: {exception.InnerException?.Message ?? exception.Message}");
                     }
                 }
             }
@@ -1616,7 +1616,7 @@ namespace Capnp.Rpc
                 {
                     if (!_questionTable.Remove(question.QuestionId))
                     {
-                        UnityEngine.Debug.LogError("Attempting to delete unknown question ID.");
+                        Console.WriteLine("Attempting to delete unknown question ID.");
                     }
                 }
             }

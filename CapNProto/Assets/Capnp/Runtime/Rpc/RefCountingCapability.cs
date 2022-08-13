@@ -40,7 +40,7 @@ namespace Capnp.Rpc
         ~RefCountingCapability()
         {
 #if DebugFinalizers
-            UnityEngine.Debug.LogWarning($"Caught orphaned capability, created from here: {CreatorStackTrace}.");
+            Console.WriteLine($"Caught orphaned capability, created from here: {CreatorStackTrace}.");
 #endif
 
             Dispose(false);

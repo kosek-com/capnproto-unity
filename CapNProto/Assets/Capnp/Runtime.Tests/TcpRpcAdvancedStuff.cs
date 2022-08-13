@@ -106,7 +106,7 @@ namespace Capnp.Net.Runtime.Tests
 
                 using (var client = SetupClient(addr, port))
                 {
-                    client.WhenConnected.Wait();
+                    //client.WhenConnected.Wait();
 
                     using (var main = client.GetMain<ITestInterface>())
                     {

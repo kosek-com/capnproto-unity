@@ -108,7 +108,7 @@ namespace Capnp.Rpc
                 else
                 {
 #if DebugEmbargos
-                    UnityEngine.Debug.Log("Call by proxy");
+                    Console.WriteLine("Call by proxy");
 #endif
                     if (_question.StateFlags.HasFlag(PendingQuestion.State.CanceledByDispose) ||
                         _question.StateFlags.HasFlag(PendingQuestion.State.FinishRequested))

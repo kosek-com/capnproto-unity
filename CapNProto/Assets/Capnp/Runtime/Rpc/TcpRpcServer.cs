@@ -100,7 +100,7 @@ namespace Capnp.Rpc
                     }
                     catch (ThreadInterruptedException)
                     {
-                        UnityEngine.Debug.LogError($"{Thread.CurrentThread.Name} interrupted at {Environment.StackTrace}");
+                        Console.WriteLine($"{Thread.CurrentThread.Name} interrupted at {Environment.StackTrace}");
                     }
                     finally
                     {
@@ -208,12 +208,12 @@ namespace Capnp.Rpc
             }
             catch (ThreadInterruptedException)
             {
-                UnityEngine.Debug.LogError($"{Thread.CurrentThread.Name} interrupted at {Environment.StackTrace}");
+                Console.WriteLine($"{Thread.CurrentThread.Name} interrupted at {Environment.StackTrace}");
             }
             catch (System.Exception exception)
             {
                 // Any other exception might be due to some other problem.
-                UnityEngine.Debug.LogException(exception);
+                Console.WriteLine(exception);
             }
         }
 
@@ -346,7 +346,7 @@ namespace Capnp.Rpc
                     if (attempt == 5)
                         throw;
 
-                    UnityEngine.Debug.LogWarning($"Failed to listen on port {port}, attempt {attempt}: {socketException}");
+                    Console.WriteLine($"Failed to listen on port {port}, attempt {attempt}: {socketException}");
                 }
 
                 ++attempt;
